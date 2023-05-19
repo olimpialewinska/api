@@ -43,6 +43,58 @@ namespace api.Controllers
             }
         }
 
+        // GET api/tasks/{userId}/completed
+        [HttpGet("{userId}/completed")]
+        public IActionResult GetCompletedTasks(Guid userId)
+        {
+            try
+            {
+                var user = _dbContext.Users.Include(f => f.Tasks).FirstOrDefault(u => u.Id == userId);
+                if (user == null)
+                    return NotFound();
+
+                var completedTasks = user.Tasks.Where(t => t.IsCompleted);
+                return Ok(completedTasks);
+            }
+            catch (Exception ex)
+            {
+                var problemDetails = new ProblemDetails
+                {
+                    Status = 500,
+                    Title = "Internal Server Error",
+                    Detail = ex.Message
+                };
+
+                return StatusCode(500, problemDetails);
+            }
+        }
+
+        // GET api/tasks/{userId}/incomplete
+        [HttpGet("{userId}/incomplete")]
+        public IActionResult GetIncompleteTasks(Guid userId)
+        {
+            try
+            {
+                var user = _dbContext.Users.Include(f => f.Tasks).FirstOrDefault(u => u.Id == userId);
+                if (user == null)
+                    return NotFound();
+
+                var incompleteTasks = user.Tasks.Where(t => !t.IsCompleted);
+                return Ok(incompleteTasks);
+            }
+            catch (Exception ex)
+            {
+                var problemDetails = new ProblemDetails
+                {
+                    Status = 500,
+                    Title = "Internal Server Error",
+                    Detail = ex.Message
+                };
+
+                return StatusCode(500, problemDetails);
+            }
+        }
+
         // GET api/tasks/{userId}/{taskId}
         [HttpGet("{userId}/{taskId}")]
         public IActionResult GetTask(Guid userId, Guid taskId)

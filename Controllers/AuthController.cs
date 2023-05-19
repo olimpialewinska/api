@@ -36,7 +36,7 @@ namespace api.Controllers
                 newUser.Password = registerModel.Password;
                 newUser.Email = registerModel.Email;
                 newUser.Token = "";
-                newUser.Tasks = new List<TaskModel> { new TaskModel { Id = new Guid(), IsCompleted = false, Description = "d" } };
+                newUser.Tasks = new List<TaskModel> { new TaskModel { Id = new Guid(), IsCompleted = false, Description = "Initial Task" } };
 
                 _dbContext.Users.Add(newUser);
                 _dbContext.SaveChanges();
